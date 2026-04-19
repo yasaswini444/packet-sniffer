@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> Network Dashboard</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<a href="/logout" style="color:red;">Logout</a>
+
+<h1>⚡ Cyber Network Dashboard</h1>
+
+<div class="cards">
+    <div class="card">
+        <h2>Total Packets</h2>
+        <p id="total">0</p>
+    </div>
+
+    <div class="card">
+        <h2>Alerts</h2>
+        <p id="alerts">0</p>
+    </div>
+
+    <div class="card">
+        <h2>AI Detections</h2>
+        <p id="ai">0</p>
+    </div>
+</div>
+
+<canvas id="chart"></canvas>
+
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Protocol</th>
+<th>Length</th>
+<th>Alert</th>
+<th>AI</th>
+</tr>
+</thead>
+
+<tbody id="table"></tbody>
+</table>
+
+<script>
+const socket = io();
+
+let totalPackets = 0;
+let alertCount = 0;
+let aiCount = 0;
+
+let chartData = {
+    labels: [],
+    datasets: [{
+        label: "Protocol Traffic",
+        data: []
+    }]
+};
+
+const chart = new Chart(document.getElementById("chart"), {
+    type: 'bar',
+    data: chartData
+});
+
+socket.on("packet", (pkt) => {
+
+    totalPackets++;
+    document.getElementById("total").innerText = totalPackets;
+
+    let alertText = pkt.alerts.join(", ");
+
+    if(alertText !== ""){
+        alertCount++;
+        document.getElementById("alerts").innerText = alertCount;
+    }
+
+    if(pkt.ai !== ""){
+        aiCount++;
+        document.getElementById("ai").innerText = aiCount;
+    }
+
+    let row = `<tr>
+        <td>${pkt.src}</td>
+        <td>${pkt.dst}</td>
+        <td>${pkt.protocol}</td>
+        <td>${pkt.length}</td>
+        <td class="alert">${alertText}</td>
+        <td class="ai">${pkt.ai}</td>
+    </tr>`;
+
+    document.getElementById("table").innerHTML += row;
+});
+
+socket.on("stats", (stats) => {
+    chartData.labels = Object.keys(stats);
+    chartData.datasets[0].data = Object.values(stats);
+    chart.update();
+});
+</script>
+
+</body>
+</html>

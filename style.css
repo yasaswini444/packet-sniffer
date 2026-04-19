@@ -1,0 +1,57 @@
+body {
+    background: #0f172a;
+    color: #e2e8f0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+h1 {
+    text-align: center;
+    color: #38bdf8;
+}
+
+.cards {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px;
+}
+
+.card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 200px;
+    box-shadow: 0 0 10px #38bdf8;
+}
+
+canvas {
+    width: 80%;
+    margin: auto;
+    display: block;
+}
+
+table {
+    width: 95%;
+    margin: auto;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th {
+    background: #1e293b;
+}
+
+td, th {
+    padding: 10px;
+    text-align: center;
+}
+
+.alert {
+    color: red;
+    font-weight: bold;
+}
+
+.ai {
+    color: yellow;
+    font-weight: bold;
+}
